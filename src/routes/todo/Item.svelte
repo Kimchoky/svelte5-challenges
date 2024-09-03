@@ -15,6 +15,7 @@
         </svg>
     </div>
     <article>
+        <div>!{todo.content}</div>
         <div>
             #{todo.order}
         </div>
