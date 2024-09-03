@@ -3,9 +3,10 @@
     import { flip } from "svelte/animate";
     import Item from "./Item.svelte";
     import { onMount } from "svelte";
+    import DevelopProgress from "./DevelopProgress.svelte";
 
 
-    const storedTodos = browser && localStorage.getItem('todos') || '[]';
+    const storedTodos = browser && localStorage.getItem('todo:todos') || '[]';
 
     let newContent = $state('');
     let isSwitching = false;
@@ -14,6 +15,10 @@
     let todos = $state(JSON.parse(storedTodos) || []);
     
     let absolutes = $state(false);
+
+    $effect(() => {
+        localStorage.setItem('todo:todos', JSON.stringify(todos));
+    })
 
     function turnAbsolutes() {
         if (!absolutes) return;
@@ -44,11 +49,17 @@
         const todo = {
             id,
             content: newContent,
+            done: false,
             order: todos.length + 1,
             xDragging: '',
             style: '',
         };
-        todos = [...todos, todo]
+        todos = [...todos, todo];
+        newContent = '';
+
+        todos.forEach((d, i) => {
+            d.state = null;
+        });
     }
 
     let dragging = $state({
@@ -119,43 +130,37 @@
         dragging = { ...dragging, top: e.pageY, left: e.pageX }
     }
 
+    /** @param {number} index */
+    function handleCompleteItem(index) {
+        todos[index].done = true;
+    }
+    /** @param {number} index */
+    function handleDeleteItem(index) {
+        if (todos[index].state === 'confirm')
+            todos = [...todos.slice(0, index), ...todos.slice(index + 1, todos.length)];
+        else {
+            todos.forEach((d, i) => {
+                d.state = (i === index) ? 'confirm' : null;
+            });
+        }
+    }
 
     onMount(()=>{
-        addTodo();addTodo();addTodo();
-
         turnAbsolutes();
     });
 </script>
 
 <svelte:body onmousemove={onMouseMove} />
 
-<details>
-    <summary>Implementation progress</summary>
-    <h6>Features</h6>
-    <ul>
-        <li><input type="checkbox" disabled checked >Add new todos</li>
-        <li><input type="checkbox" disabled >Mark todos as completed</li>
-        <li><input type="checkbox" disabled >Delete todos</li>
-        <li><input type="checkbox" disabled >Display a list of todos</li>
-        <li><input type="checkbox" disabled >Svelte 5 runes for state management</li>
-    </ul>
-    <h6>Optional Features</h6>
-    <ul>
-        <li><input type="checkbox" disabled >Drag and drop: Reordering todos</li>
-        <li><input type="checkbox" disabled >Storage: <code>localStorage</code></li>
-        <li><input type="checkbox" disabled >Service workers: Cache app for offline funcionality</li>
-    </ul>
-</details>
-
-<hr/>
+<DevelopProgress />
 
 <h1>TODO App</h1>
 
 <div class="x-new-todo">
-    <input type="text" onkeypress={handleKeypress} bind:value={newContent}>
+    <input type="text" onkeypress={handleKeypress} bind:value={newContent} placeholder="Something to do...">
     <button onclick={addTodo}>Add</button>
 </div>
-Dragging[{draggingIndex}]
+
 <div class="grid">
     <ul class="x-todo-items {absolutes?'x-absolutes':''}"
         style="--x-dragging-top: {dragging.top}; --x-dragging-left: {dragging.left};">
@@ -169,10 +174,22 @@ Dragging[{draggingIndex}]
             style={todo.style}
             >
             <div class="x-todo-item {todo.xDragging}" draggable="true">
-                <div>{todo.content}</div>
-                <div style="display: inline-block">
-                    #{todo.order} / {todo.xDragging} / {todo.style} / {todo.id}
+                <div>
+                    <input type="checkbox" onclick={()=>handleCompleteItem(index)} checked={todo.done}/>
                 </div>
+                <div class="x-todo-item-content">
+                    <div>{todo.content}</div>
+                </div>
+                <div>
+                    <button onclick={()=>handleDeleteItem(index)} class={todo.state}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16m-10 4v6m4-6v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- <div style="display: inline-block">
+                    #{todo.order} / {todo.xDragging} / {todo.style} / {todo.id}
+                </div> -->
             </div>
         </li>
     {/each}
@@ -185,6 +202,11 @@ Dragging[{draggingIndex}]
 
 
 <style lang="scss">
+
+    button.confirm {
+        background-color: red;
+    }
+
     .x-new-todo {
         display: flex;
         align-items: center;
@@ -216,6 +238,22 @@ Dragging[{draggingIndex}]
         width: 100%;
         border: 1px solid var(--pico-primary);
         background-color: bisque;
+        height: 4rem;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .5rem .5rem;
+        
+        div.x-todo-item-content {
+            flex-grow: 1;
+            height: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+        }
+
     }
 
     .x-dragging {
