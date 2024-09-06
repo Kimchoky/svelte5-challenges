@@ -1,22 +1,7 @@
 <script>
+    import { browser } from '$app/environment';
+    import { goto } from '$app/navigation';
 
-
-
+    if (browser)
+        goto('/todo');
 </script>
-
-<h1>List of Challenges</h1>
-<ul>
-    <li>
-        <a href="/todo" class="x-no-line">
-            <article>
-                TODO App
-            </article>
-        </a>
-    </li>
-</ul>
-
-
-<style>
-    
-</style>
-

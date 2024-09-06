@@ -10,7 +10,7 @@
     </ul>
     <h6>Optional Features</h6>
     <ul>
-        <li><input type="checkbox" disabled >Drag and drop: Reordering todos</li>
+        <li><input type="checkbox" disabled checked>Drag and drop: Reordering todos</li>
         <li><input type="checkbox" disabled checked>Storage: <code>localStorage</code></li>
         <li><input type="checkbox" disabled >Service workers: Cache app for offline funcionality</li>
     </ul>

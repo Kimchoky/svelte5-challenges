@@ -3,9 +3,7 @@ export async function handle({ event, resolve }) {
 
     const picoTheme = event.cookies.get('pico:theme') || 'dark';
 
-    console.log('picoTheme', picoTheme);
-
-
+    // HTML replacing
 	const response = await resolve(event, {
         transformPageChunk: ({ html, done }) => {
             if (done) {
@@ -13,5 +11,10 @@ export async function handle({ event, resolve }) {
             }
         }
     });
+
+    // Custom Headers
+    response.headers.set('x-author', 'kimchoky');
+
+    
 	return response;
 }

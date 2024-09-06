@@ -3,7 +3,6 @@ interface Todo {
     content: string,
     done: boolean,
     order: number,
-    xDragging: string,
     style: string = '',
     state?: 'confirm' | '' | null,
 }
