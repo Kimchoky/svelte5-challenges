@@ -1,4 +1,7 @@
+export const ssr = true;
+
 import { browser } from "$app/environment";
+import { setContext } from "svelte";
 
 if (browser) {
 
@@ -22,5 +25,11 @@ if (browser) {
     };
 
     registerServiceWorker();
+
+}
+
+
+
+export async function load({ }) {
 
 }

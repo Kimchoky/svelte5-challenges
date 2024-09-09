@@ -68,9 +68,9 @@
 
     onMount(()=>{
         if ('serviceWorker' in navigator) {
-	        addEventListener('load', function () {
-		        navigator.serviceWorker.register('/todo/service-worker.js');
-	        });
+	        // addEventListener('load', function () {
+		    //     navigator.serviceWorker.register('/todo/service-worker.js');
+	        // });
         } 
 
     });

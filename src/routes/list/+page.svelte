@@ -1,7 +1,5 @@
 <script>
 
-
-
 </script>
 
 <h1>List of Challenges</h1>

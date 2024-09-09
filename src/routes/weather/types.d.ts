@@ -5,5 +5,6 @@ interface GeoLocation {
     longitude?: number;
     contry_id?: number;
     country_code?: string;
+    country?: string;
     timezone?: string;
 }
