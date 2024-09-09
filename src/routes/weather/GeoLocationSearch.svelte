@@ -57,8 +57,6 @@
     /** @param { GeoLocation } item */
     function handleClick(item) {
         app.geoLocation = item;
-        console.log('app.geoLocation', app.geoLocation, item);
-        console.log(app.geoLocation.latitude, app.geoLocation.longitude, app.geoLocation.country_code);
         searching = false;
         geoResults = [];
         query = '';
@@ -79,22 +77,16 @@
         geoResults = sample_seoul;
     })
 
-
-const onImageLoad = function (el) {
-    console.log(el)
-}
 </script>
 
 <div>
     <div class:x-hidden={searching} class="x-current">
         {#await preload(currFlagUrl)}
-        <div></div>
+        <div aria-busy="true"></div>
+        <div>Loading current location...</div>
         {:then _}
         <img src={currFlagUrl} width="30" alt="{app.geoLocation?.country}">
-        <div>
-            <div>{app.geoLocation?.name}</div>
-            <div>({app.geoLocation?.latitude}, {app.geoLocation?.longitude})</div>
-        </div>
+        <div>{app.geoLocation?.name}</div>
         {/await}
         <button class="x-trans" onclick={toggleSearchBox}>
             <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
@@ -121,12 +113,13 @@ const onImageLoad = function (el) {
         {:else if geoResults.length > 0}
         <ul>
             {#each geoResults as item, index (item.id)}
-            <li class="x-flex-row" onclick={()=>{handleClick(item)}}>
-                <div>
-                    <img src="{getCountryFlagUrl(item.country_code)}" width="30" alt="{item.country}">
-                </div>
-                <div>{item.name}</div>
-                <div>({item.latitude}, {item.longitude})</div>
+            <li>
+                <button class="x-flex-row x-trans" onclick={()=>{handleClick(item)}}>
+                    <div>
+                        <img src="{getCountryFlagUrl(item.country_code)}" width="30" alt="{item.country}">
+                    </div>
+                    <div>{item.name}</div>
+                </button>
             </li>
             {/each}
         </ul>        
@@ -151,12 +144,13 @@ const onImageLoad = function (el) {
         width: 100%;
         padding: 0;
 
-        li {
-            cursor: pointer;
-            height: 3rem;
+        button {
+            width: 100%;
             padding: 1rem 2rem;
+            height: 3rem;
+        }
+        li {
             list-style: none;
-            border: 1px solid currentColor;
             border-radius: 5px;
             background-color: light-dark(var(--pico-color-slate-100), var(--pico-color-slate-700));
             gap: 2rem;
@@ -172,14 +166,15 @@ const onImageLoad = function (el) {
         }
     }
     .x-current {
-        display: flex;
-        justify-content: space-between;
+        border: 1px solid var(--pico-color-slate-100);
+        background-color: light-dark(var(--pico-color-slate-100), var(--pico-color-slate-700));
+        display: grid;
+        grid-template-columns: 30px auto 4rem;
         align-items: center;
         gap: 1rem;
         padding-left: 1rem;
-        
+
         &>:nth-child(2) {
-            flex-grow: 1;
             display: flex;
             justify-content: space-between;
         }

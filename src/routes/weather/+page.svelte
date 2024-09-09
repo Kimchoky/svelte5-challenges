@@ -3,7 +3,7 @@
     import GeoLocationSearch from "./GeoLocationSearch.svelte";
     import { onMount } from "svelte";
     import { app } from "./store.svelte";
-    import Forcast from "./Forcast.svelte";
+    import Forecast from "./Forecast.svelte";
 
 
 
@@ -35,14 +35,18 @@
 
 <DevelopProgress />
 <h1>Weather App</h1>
-<div>
-     
-    <GeoLocationSearch />
-     
-    <Forcast />
 
-</div>
+<section>
+    <GeoLocationSearch />
+</section>
+
+<section>
+    <Forecast data={data} />
+</section>
+
 
 <style>
-    
+    section {
+        padding: 1rem 0 0 0;
+    }
 </style>
