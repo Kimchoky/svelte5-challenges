@@ -8,3 +8,19 @@ interface GeoLocation {
     country?: string;
     timezone?: string;
 }
+
+
+interface CurrentInfo {
+    time: string,
+    temperature_2m: number | null,
+    weather_code: number | null,
+    interval?: number,
+}
+
+interface Forecast {
+    current: CurrentInfo|null,
+    hourly: {
+        temperature_2m?: Array<number>,
+        time?: Array<string>,
+    },
+}

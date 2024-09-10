@@ -1,7 +1,6 @@
 export const ssr = true;
 
 import { browser } from "$app/environment";
-import { setContext } from "svelte";
 
 if (browser) {
 

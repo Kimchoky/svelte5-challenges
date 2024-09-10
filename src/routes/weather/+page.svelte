@@ -2,10 +2,13 @@
     import DevelopProgress from "./DevelopProgress.svelte";
     import GeoLocationSearch from "./GeoLocationSearch.svelte";
     import { onMount } from "svelte";
+    import { rangeGenerator } from '$lib/utils';
     import { app } from "./store.svelte";
     import Forecast from "./Forecast.svelte";
+    import WmoWeatherIcon from './WmoWeatherIcon.svelte';
 
-
+    const { data } = $props();
+    app.temperatureUnit = data.temperatureUnit;
 
     onMount(()=>{
         // Get current geolocation with browsers API.
@@ -30,20 +33,38 @@
         })
     })
 
+    /** @type { import('svelte/elements').MouseEventHandler<HTMLInputElement> } */
+    function switchUnit(e) {
+        if (e.target instanceof HTMLInputElement && e.target.checked)
+            app.temperatureUnit = 'f';
+        else 
+            app.temperatureUnit = 'c';
+        
+        document.cookie = `app:temperatureUnit=${app.temperatureUnit};max-age=31536000;path=/`;
+    }
+
+
+
 </script>
 
 
 <DevelopProgress />
 <h1>Weather App</h1>
+<div>
+    <label>
+        Celsius
+        <input name="terms" type="checkbox" role="switch" onclick={switchUnit} checked={app.temperatureUnit === 'f'} />
+        Fahrenheit
+    </label>
+</div>
 
 <section>
     <GeoLocationSearch />
 </section>
 
 <section>
-    <Forecast data={data} />
+    <Forecast />
 </section>
-
 
 <style>
     section {

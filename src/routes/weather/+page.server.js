@@ -1,3 +1,5 @@
-// 'https://geocoding-api.open-meteo.com/v1/search?name=Berlin&count=10&language=en&format=json';
-const geocodingURI = 'https://geocoding-api.open-meteo.com/v1/search?name=Seoul&format=json';
-
+export async function load({ cookies }) {
+    return {
+        temperatureUnit: cookies.get('app:temperatureUnit') ?? 'c',
+    }
+}
