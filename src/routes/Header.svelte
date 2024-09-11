@@ -10,6 +10,8 @@
 
 <div class="x-flex-row">
     <a class="x-no-line" href="/"><span>Coding Challenges</span></a>
+    
+    <div class="media-checker">😀</div>
 
     <div class="x-flex-row x-f-right">
         <a class="x-no-line" href="/list"><span>List</span></a>
@@ -43,5 +45,22 @@
     a.x-no-line {
         color: currentColor;
         font-weight: 600;
+    }
+
+    .media-checker {
+        display: none;
+        
+        background-color: green;
+        color: white;
+        &:after { content: 'mobile'; }
+
+        @include tablet {
+            background-color: violet;
+            &:after { content: 'tablet'; }
+        }
+        @include desktop {
+            background-color: coral;
+            &:after { content: 'desktop'; }
+        }
     }
 </style>

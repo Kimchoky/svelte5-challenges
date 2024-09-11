@@ -8,7 +8,7 @@
         <li><input type="checkbox" disabled checked>Use server-side rendering for initial page load</li>
         <li><input type="checkbox" disabled >Implement client-side navigation for subsequent searches</li>
         <li><input type="checkbox" disabled checked>Use Svelte runes for global state management</li>
-        <li><input type="checkbox" disabled >implement error handling for API requests and invalid user input</li>
+        <li><input type="checkbox" disabled checked>implement error handling for API requests and invalid user input</li>
     </ul>
     <h6>Optional Features</h6>
     <ul>

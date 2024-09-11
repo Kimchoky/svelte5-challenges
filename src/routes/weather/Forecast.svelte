@@ -62,8 +62,8 @@
 
 
 {#if apiUrl}
-<div>
-    <div class="x-flex-col x-current">
+<div class="x-wrapper">
+    <div class="x-current">
     {#await getForecast()}
         <div aria-busy="true">Loading...</div>
     {:then _}
@@ -82,65 +82,100 @@
     {/await}
     </div>
 
-    <h3>Forecast</h3>
-    <div class="x-flex-col">
-        <div class="x-forecast">
+    <div class="x-forecast">
+        <h3>Forecast</h3>
+        <ul class="container">
             {#each daily as d}
-            <div class="x-flex-col">
+            <li class="">
                 <div>{d.time}</div>
                 <div><WmoWeatherIcon code={d.weather_code ?? -1} /></div>
                 <div>
-                    <div>min: {d.min} {temperatureUnit}</div>
                     <div>max: {d.max} {temperatureUnit}</div>
+                    <div>min: {d.min} {temperatureUnit}</div>
                 </div>
-            </div>
+            </li>
             {/each}
-        </div>
+        </ul>
     </div>
 
 </div>
 {/if}
 
 <style lang="scss">
+    .x-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+
+        @include desktop {
+            flex-direction: row;
+        }
+    }
     .x-current {
         position: relative;
+        justify-content: center;
+        width: calc(100% - 10rem);
 
-    }
-    .x-curr-time {
-        position: absolute;
-        top: 0;
-        left: 0;
-        font-weight: 600;
-        color: light-dark(lightseagreen, bisque);
-    }
+        .x-curr-time {
+            position: absolute;
+            top: 0;
+            left: -5rem;
+            font-weight: 600;
+            color: light-dark(lightseagreen, bisque);
+            
+            @include desktop {
+                left: 0;
+                top: -50%;
+            }
+        }
 
-    .x-curr-temp {
-        position: absolute;
-        top: 0;
-        right: 1rem;
-        font-weight: 900;
-        font-size: 2rem;
-        color: light-dark(lightseagreen, bisque);
+        .x-curr-temp {
+            position: absolute;
+            top: 0;
+            right: -5rem;
+            font-weight: 900;
+            font-size: 2rem;
+            color: light-dark(lightseagreen, bisque);
+
+            @include desktop {
+                right: 0;
+                top: -50%;
+            }
+        }
+
+        .x-curr-time, .x-curr-temp {
+        
+        }
+
+
     }
 
     .x-forecast {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        gap: 2rem;
+        width: 100%;
+        
+        ul {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
 
-        & > div {
-            border: 1px currentColor solid;
-            border-radius: 6px;
-            gap: 1rem;
-            padding: 1rem;
+            li {
+                list-style: none;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                // width: 75vw;
+                padding: .5rem 1rem;
+                gap: 1rem;
+            }
+
+            & > li:not(:last-child) {
+                border-bottom: 1px solid currentColor;
+            }
         }
-
     }
+    
 
-    @media screen and (max-width: 768) {
-        .x-current {
-            width: 50%
-        }
-    }
+
 </style>
