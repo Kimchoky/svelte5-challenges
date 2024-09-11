@@ -13,14 +13,16 @@ interface GeoLocation {
 interface CurrentInfo {
     time: string,
     temperature_2m: number | null,
-    weather_code: number | null,
+    weather_code: number,
     interval?: number,
 }
 
 interface Forecast {
     current: CurrentInfo|null,
-    hourly: {
-        temperature_2m?: Array<number>,
-        time?: Array<string>,
+    daily?: {
+        temperature_2m_min: Array<number>,
+        temperature_2m_max: Array<number>,
+        time: Array<string>,
+        weather_code: Array<number>,
     },
 }

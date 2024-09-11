@@ -1,6 +1,6 @@
 <script>
 
-    import "../app.css";
+    import "../app.scss";
 
     import { picoTheme } from "$lib/store/theme";
     import Header from "./Header.svelte";

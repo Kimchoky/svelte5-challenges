@@ -14,8 +14,18 @@ a.x-no-line {
     justify-content: space-between;
     align-items: center;
 }
+.x-flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
 
 .x-transparent {
     border: 0;
     background-color: transparent;
+}
+
+@mixin flex-row {
+    display: flex;
 }

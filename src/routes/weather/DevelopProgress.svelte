@@ -3,19 +3,19 @@
     <h6>Features</h6>
     <ul>
         <li><input type="checkbox" disabled checked>Allow users to search for a city</li>
-        <li><input type="checkbox" disabled >Display current weather conditions for the searched city</li>
-        <li><input type="checkbox" disabled >Show a forecast</li>
+        <li><input type="checkbox" disabled checked>Display current weather conditions for the searched city</li>
+        <li><input type="checkbox" disabled checked>Show a forecast</li>
         <li><input type="checkbox" disabled checked>Use server-side rendering for initial page load</li>
         <li><input type="checkbox" disabled >Implement client-side navigation for subsequent searches</li>
-        <li><input type="checkbox" disabled >Use Svelte runes for global state management</li>
+        <li><input type="checkbox" disabled checked>Use Svelte runes for global state management</li>
         <li><input type="checkbox" disabled >implement error handling for API requests and invalid user input</li>
     </ul>
     <h6>Optional Features</h6>
     <ul>
         <li><input type="checkbox" disabled checked>Use the browser's geolocation API to get the user's current location</li>
-        <li><input type="checkbox" disabled >Display weather for the user's current location on initial load</li>
-        <li><input type="checkbox" disabled >Allow user to switch between Celsius and Fahrenheit</li>
-        <li><input type="checkbox" disabled >Ensure the app looks good on both desktop and mobile devices</li>
+        <li><input type="checkbox" disabled checked>Display weather for the user's current location on initial load</li>
+        <li><input type="checkbox" disabled checked>Allow user to switch between Celsius and Fahrenheit</li>
+        <li><input type="checkbox" disabled checked>Ensure the app looks good on both desktop and mobile devices</li>
     </ul>
 
     <h6>API</h6>
