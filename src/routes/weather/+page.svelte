@@ -1,9 +1,10 @@
 <script>
-    import DevelopProgress from "./DevelopProgress.svelte";
     import GeoLocationSearch from "./GeoLocationSearch.svelte";
     import { onMount } from "svelte";
     import { app } from "./store.svelte";
     import Forecast from "./Forecast.svelte";
+    import DevelopProgress from "$lib/components/DevelopProgress.svelte";
+    import developProgressData from './DevelopProgress';
 
     /** @type { {data:{ temperatureUnit:string, geoLocation: GeoLocation|null} }}*/
     const { data } = $props();
@@ -50,10 +51,9 @@
     }
 
 
-
 </script>
 
-<DevelopProgress />
+<DevelopProgress data={developProgressData} />
 
 <h1>Weather App</h1>
 <div class="x-right">

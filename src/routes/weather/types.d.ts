@@ -1,3 +1,14 @@
+interface DevelopProgressItem {
+    done: boolean,
+    content: string,
+}
+
+interface DevelopProgress {
+    features: Array<DevelopProgressItem>,
+    optionals?: Array<DevelopProgressItem>,
+    otherHtml?: string,
+}
+
 interface GeoLocation {
     id?: number;
     name?: string;

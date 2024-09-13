@@ -1,7 +1,8 @@
 <script>
     import { browser } from "$app/environment";
     import { onMount } from "svelte";
-    import DevelopProgress from "./DevelopProgress.svelte";
+    import DevelopProgress from '$lib/components/DevelopProgress.svelte';
+    import developProgressData from './DevelopProgress'
     import List from "./List.svelte";
 
 
@@ -76,7 +77,7 @@
     });
 </script>
 
-<DevelopProgress />
+<DevelopProgress data={developProgressData} />
 
 <h1>TODO App</h1>
 
