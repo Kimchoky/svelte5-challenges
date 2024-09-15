@@ -3,5 +3,5 @@
     import { goto } from '$app/navigation';
 
     if (browser)
-        goto('/weather');
+        goto('/white-board');
 </script>
