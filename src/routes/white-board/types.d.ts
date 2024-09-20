@@ -1,13 +1,26 @@
-interface Tool {
-    name: 'Pencil'|'Eraser';
+interface DimPosition {
+    x: number,
+    y: number,
+    button: number,
+    isMouseDown: boolean,
 }
 
-interface Work {
-    tool: Tool,
-    state: Object,
+interface ToolInteract {
+    drawingTool: DrawingTool,
+    pencil: Function,
+    eraser: Function,
+    undo:Function,
+    redo: Function,
 }
 
-interface State {
-    tool: Tool,
-    history: Array<Work>
+interface QueueItem {
+    drawingTool: DrawingTool,
+    actions: Array<ToolAction>
 }
+
+type ToolAction = {
+    method?: string,
+    args?: Array<number>,
+    property?: string,
+    value?: string|number,
+};

@@ -1,7 +1,6 @@
-<script>
+<script lang="ts">
     
-    /** @type { {data: DevelopProgress} }*/
-    let { data } = $props();
+    let { data }: {data: DevelopProgress} = $props();
 
 </script>
 

@@ -1,64 +1,100 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import cursor from './cursor.svelte';
-
-    let pos = $state({ x: 0, y: 0});
-    let canvas: HTMLCanvasElement;
-    let ctx: CanvasRenderingContext2D;
+    import { getActionQueue, } from './modules/queue.svelte';
+    import { getTools, drawActionsInQueue, DrawingTool, } from './modules/tools.svelte';
     
-    let isMouseDown = $state(false);
+    let actinoQueue = getActionQueue();
+    let tools = getTools();
+    let canvas: HTMLCanvasElement;
 
-    function init() {
-        ctx.strokeStyle = '#f00';
+    let xCursorClass = $derived('x-cursor-' + tools?.tool?.name);
+    
+    let pos: DimPosition = $state({ x: 0, y: 0, button: 0, isMouseDown: false });
+    
+    function onResize() {
         canvas.setAttribute('width', ''+canvas.getBoundingClientRect().width);
         canvas.setAttribute('height', ''+canvas.getBoundingClientRect().height);
+        drawActionsInQueue();
     }
 
-    function handleMouseMove(e: MouseEvent) {
+    function handleMouseMove(e: MouseEvent|TouchEvent) {
         const rect = canvas.getBoundingClientRect();
-        pos.x = e.x - rect.left;
-        pos.y = e.y - rect.top;
-        
-        if (isMouseDown) {
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-        }
-        ctx.moveTo(pos.x, pos.y);
-    }
-    function handleMouseDown() {
-        // ctx.moveTo()
-        isMouseDown = true;
+        const ev = (e instanceof TouchEvent ? e.targetTouches[0] : e );
 
-        ctx.beginPath();
+        pos.x = ev.clientX - rect.left;
+        pos.y = ev.clientY - rect.top;
+
+        tools.tool.handleMouseMove(pos);
+    }
+    function handleMouseDown(e: MouseEvent|TouchEvent) {
+        pos.isMouseDown = true;
+        tools.tool.handleMouseDown(pos);
+
     }
 
-    function handleMouseUp() {
-        isMouseDown = false;
+    function handleMouseUp(e: MouseEvent|TouchEvent) {
+        pos.isMouseDown = false;
+        tools.tool.handleMouseUp(pos);
     }
+
 
     onMount(()=>{
         canvas = <HTMLCanvasElement>document.getElementById('canvas');
-        ctx = <CanvasRenderingContext2D>canvas.getContext('2d');
-        init();
+        tools = getTools(<CanvasRenderingContext2D>canvas.getContext('2d'));
+        tools.setPencil();
+        
+        onResize();
 
     })
 
+    $effect(() => {
+        if (tools.tool) {
+            console.log('tool changed : ' + tools.tool.name);
+            // interact.drawingTool = drawingTool;
+        }
+    })
+
+
+    let q = $derived(actinoQueue.queue.map((aq, idx) => {
+        return Object.assign({ cursor: (idx === actinoQueue.cursor) }, aq);
+    }));
+
 </script>
 
+<svelte:window onresize={onResize} />
+
 <div style="position: fixed; top: 0; right: 0;">
-    {pos.x}, {pos.y}, [{isMouseDown}]
+    {pos.x}, {pos.y}, [{pos.isMouseDown}]
 </div>
 
 <canvas id="canvas"
+    class="{xCursorClass}"
     onmousemove={handleMouseMove}
+    ontouchmove={handleMouseMove}
     onmousedown={handleMouseDown}
+    ontouchstart={handleMouseDown}
     onmouseup={handleMouseUp}
+    ontouchend={handleMouseUp}
     ></canvas>
 
-<style>
+<div style="position: fixed; top: 2rem; right: 0;">
+    <ul>
+        {#each q as aq, idx}
+        <li>{aq.cursor ? '⭐':''} {idx}: {aq.drawingTool.name}</li>
+        {/each}
+    </ul>
+</div>
+
+<style lang="scss">
     #canvas {
         border: 1px solid currentColor;
         width: 100%;
         height: 100%;
+
+    }
+
+    .x-cursor-pencil {
+    }
+    .x-cursor-eraser {
     }
 </style>
