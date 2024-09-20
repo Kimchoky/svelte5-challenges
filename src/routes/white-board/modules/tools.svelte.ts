@@ -138,7 +138,6 @@ abstract class Shape extends DrawingTool {
     }
     handleMouseDown = (pos: DimPosition) => {
         this.initPos = {...pos};
-        console.log('initpos', this.initPos.x, this.initPos.y);
         this.postHandleMouseDown();
     }
     handleMouseUp = (pos: DimPosition) => {
@@ -177,10 +176,42 @@ class Circle extends Shape {
     }
 }
 
+class Line extends Shape {
+    doHandleMouseMove(pos: DimPosition) {
+        drawActionsInQueue();
+        this.toolActions = [
+            { method: 'beginPath'},
+            { method: 'moveTo', args: [pos.x, pos.y] },
+            { method: 'lineTo', args: [this.initPos.x, this.initPos.y] },
+            { method: 'stroke'},
+            { method: 'closePath'},
+        ];
+        this.handleDrawAction(this.toolActions);
+    }
+}
+
+class Square extends Shape {
+    doHandleMouseMove(pos: DimPosition) {
+        drawActionsInQueue();
+        const w = pos.x - this.initPos.x;
+        const h = pos.y - this.initPos.y;
+
+        this.toolActions = [
+            { method: 'beginPath'},
+            { method: 'rect', args: [this.initPos.x, this.initPos.y, w, h] },
+            { method: 'stroke'},
+            { method: 'closePath'},
+        ];
+        this.handleDrawAction(this.toolActions);
+    }
+}
+
 let pencil = new Pencil('pencil');
 let eraser = new Eraser('eraser');
 let general = new GeneralTool('general');
 let circle = new Circle('circle');
+let line = new Line('line');
+let square = new Square('square');
 
 //-- Tools
 let context: CanvasRenderingContext2D;
@@ -193,6 +224,8 @@ export function getTools(ctx?: CanvasRenderingContext2D) {
     function setPencil() { tool = pencil }
     function setEraser() { tool = eraser }
     function setCircle() { tool = circle }
+    function setLine() { tool = line }
+    function setSquare() { tool = square }
 
     return {
         get context() { return context },
@@ -201,6 +234,8 @@ export function getTools(ctx?: CanvasRenderingContext2D) {
         setPencil,
         setEraser,
         setCircle,
+        setLine,
+        setSquare,
     }
 }
 
