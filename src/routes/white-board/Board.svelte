@@ -17,17 +17,21 @@
         drawActionsInQueue();
     }
 
-    function handleMouseMove(e: MouseEvent|TouchEvent) {
+    function setPosOnCanvas(e: MouseEvent|TouchEvent) {
         const rect = canvas.getBoundingClientRect();
         const ev = (e instanceof TouchEvent ? e.targetTouches[0] : e );
 
         pos.x = ev.clientX - rect.left;
         pos.y = ev.clientY - rect.top;
+    }
 
+    function handleMouseMove(e: MouseEvent|TouchEvent) {
+        setPosOnCanvas(e);
         tools.tool.handleMouseMove(pos);
     }
     function handleMouseDown(e: MouseEvent|TouchEvent) {
         pos.isMouseDown = true;
+        setPosOnCanvas(e);
         tools.tool.handleMouseDown(pos);
 
     }
@@ -64,7 +68,8 @@
 <svelte:window onresize={onResize} />
 
 <div style="position: fixed; top: 0; right: 0;">
-    {pos.x}, {pos.y}, [{pos.isMouseDown}]
+    <div>{pos.x}, {pos.y}, [{pos.isMouseDown}]</div>
+    <div>{tools?.tool?.initPos?.x}, {tools?.tool?.initPos?.y}</div>
 </div>
 
 <canvas id="canvas"

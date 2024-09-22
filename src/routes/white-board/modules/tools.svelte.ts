@@ -137,7 +137,10 @@ abstract class Shape extends DrawingTool {
         this.toolActions = [];
     }
     handleMouseDown = (pos: DimPosition) => {
+        console.log(pos.x, pos.y);
         this.initPos = {...pos};
+        console.log(pos.x, pos.y);
+        console.log(this.initPos.x, this.initPos.y);
         this.postHandleMouseDown();
     }
     handleMouseUp = (pos: DimPosition) => {
