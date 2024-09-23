@@ -2,7 +2,6 @@
     import { getActionQueue, } from "./modules/queue.svelte";
     import { getTools } from "./modules/tools.svelte";
     import { colorPicker } from './modules/tools.svelte';
-    import gallery from './modules/gallery.svelte';
 
     const actionQueue = getActionQueue();
     const tools = getTools();
@@ -38,25 +37,17 @@
         colorPicker.color = colorPicker.favorites[index];
     }
 
-    function saveToGallery() {
-        console.log(actionQueue)
-        gallery.save(actionQueue.queue);
-    }
-    function loadFromGallery() {
-        const s = gallery.load();
-        console.log(s);
-    }
 
 </script>
 
 <div class="x-wrapper"
     style=" --direction: {direction}; --icon-width: {iconWidth}; --color: {colorPicker.color}">
     <button onclick={()=>{}} id="colorPicker"><input type="color" bind:value={colorPicker.color} onchange={addFavoriteColor}></button>
-    <button onclick={()=>tools.setPencil()} class="x-colored" class:x-active={tools?.tool?.name==='pencil'}>{@html icons.pencil}</button>
-    <button onclick={()=>tools.setEraser()} class:x-active={tools?.tool?.name==='eraser'}>{@html icons.eraser}</button>
-    <button onclick={()=>tools.setCircle()} class="x-colored" class:x-active={tools?.tool?.name==='circle'}>{@html icons.circle}</button>
-    <button onclick={()=>tools.setLine()} class="x-colored" class:x-active={tools?.tool?.name==='line'}>{@html icons.line}</button>
-    <button onclick={()=>tools.setSquare()} class="x-colored" class:x-active={tools?.tool?.name==='square'}>{@html icons.square}</button>
+    <button onclick={()=>tools.setTool('pencil')} class="x-colored" class:x-active={tools?.tool?.name==='pencil'}>{@html icons.pencil}</button>
+    <button onclick={()=>tools.setTool('eraser')} class:x-active={tools?.tool?.name==='eraser'}>{@html icons.eraser}</button>
+    <button onclick={()=>tools.setTool('circle')} class="x-colored" class:x-active={tools?.tool?.name==='circle'}>{@html icons.circle}</button>
+    <button onclick={()=>tools.setTool('line')} class="x-colored" class:x-active={tools?.tool?.name==='line'}>{@html icons.line}</button>
+    <button onclick={()=>tools.setTool('square')} class="x-colored" class:x-active={tools?.tool?.name==='square'}>{@html icons.square}</button>
     <button onclick={()=>tools.generalTool.clear()}>{@html icons.clear}</button>
     <button onclick={()=>tools.generalTool.undo()} disabled={actionQueue.cursor < 0}>{@html icons.undo}</button>
     <button onclick={()=>tools.generalTool.redo()} disabled={actionQueue.cursor >= actionQueue.queue.length - 1}>{@html icons.redo}</button>
@@ -71,8 +62,9 @@
 
     <span class="x-splitter"></span>
 
-    <button onclick={saveToGallery}>Save</button>
-    <button onclick={loadFromGallery}>Load</button>
+    <button onclick={tools.generalTool.saveData}>Save</button>
+    <button onclick={tools.generalTool.loadData}>Load</button>
+    <button onclick={tools.generalTool.removeData}>Remove</button>
     
 </div>
 

@@ -1,4 +1,6 @@
 import { getActionQueue } from "./queue.svelte";
+import gallery from './gallery.svelte';
+
 
 const actionQueue = getActionQueue();
 let colorPicker: ColorPicker = $state({ color: 'currentColor'});
@@ -54,11 +56,32 @@ class GeneralTool extends Tool {
             this.actionQueue.spliceAfterCursor();
         }
     }
-    save = () => {
+    saveData = () => {
+        gallery.save(actionQueue.queue);
+    }
+    loadData = (index: number) => {
+
+        const data = gallery.load();
+        console.log('data', data);
+
+        const queueItem = data[0].queueItem;
+        console.log('qi', queueItem);
+
+        const convertedData = queueItem.map(d => ({
+            drawingTool: tools[d.drawingToolName],
+            actions: d.actions,
+        }))
+        
+        actionQueue.setQueueCursor(-1);
+        actionQueue.spliceAfterCursor();
+        actionQueue.pushItems(convertedData);
+
+        actionQueue.setQueueCursor(actionQueue.queue.length - 1);
+        drawActionsInQueue(this.actionQueue.cursor);
         
     }
-    load = (index: number) => {
-
+    removeData = () => {
+        gallery.remove(0);
     }
 
 }
@@ -145,10 +168,7 @@ abstract class Shape extends DrawingTool {
         this.toolActions = [];
     }
     handleMouseDown = (pos: DimPosition) => {
-        console.log(pos.x, pos.y);
         this.initPos = {...pos};
-        console.log(pos.x, pos.y);
-        console.log(this.initPos.x, this.initPos.y);
         this.postHandleMouseDown();
     }
     handleMouseUp = (pos: DimPosition) => {
@@ -220,12 +240,14 @@ class Square extends Shape {
     }
 }
 
-let pencil = new Pencil('pencil');
-let eraser = new Eraser('eraser');
-let general = new GeneralTool('general');
-let circle = new Circle('circle');
-let line = new Line('line');
-let square = new Square('square');
+const tools = {
+    pencil: new Pencil('pencil'),
+    eraser: new Eraser('eraser'),
+    general: new GeneralTool('general'),
+    circle: new Circle('circle'),
+    line: new Line('line'),
+    square: new Square('square'),
+}
 
 //-- Tools
 let context: CanvasRenderingContext2D;
@@ -235,21 +257,17 @@ export function getTools(ctx?: CanvasRenderingContext2D) {
     if (ctx) 
         context = ctx;
 
-    function setPencil() { tool = pencil }
-    function setEraser() { tool = eraser }
-    function setCircle() { tool = circle }
-    function setLine() { tool = line }
-    function setSquare() { tool = square }
+    function setTool(name: string) {
+        if (tools[name] === undefined)
+            throw `No tool found with name: ${name}`;
+        tool = tools[name];
+    }
 
     return {
         get context() { return context },
         get tool() { return tool },
-        get generalTool() { return general },
-        setPencil,
-        setEraser,
-        setCircle,
-        setLine,
-        setSquare,
+        get generalTool() { return tools.general },
+        setTool,
     }
 }
 

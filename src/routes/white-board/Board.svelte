@@ -45,7 +45,7 @@
     onMount(()=>{
         canvas = <HTMLCanvasElement>document.getElementById('canvas');
         tools = getTools(<CanvasRenderingContext2D>canvas.getContext('2d'));
-        tools.setPencil();
+        tools.setTool('pencil');
         
         onResize();
 

@@ -15,6 +15,7 @@ interface ToolInteract {
 
 interface QueueItem {
     drawingTool: DrawingTool,
+    drawingToolName?: string,
     actions: Array<ToolAction>
 }
 

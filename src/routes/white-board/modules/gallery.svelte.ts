@@ -15,7 +15,6 @@ function jsonToQueueItem(str: string) {
 function load(): Array<Gallery> {
 
     const s = localStorage.getItem(LOCAL_STORAGE_ITEM_ID);
-    console.log('load s', s)
 
     if (!s) return [];
 
@@ -37,12 +36,18 @@ function save(queueItem: Array<QueueItem>) {
         return;
     }
 
-    const array = queueItem.map(qi => ({
+    const queueItemConverted = queueItem.map(qi => ({
         drawingToolName: qi.drawingTool.name,
+        drawingTool: null,
         actions: qi.actions,
     }));
+
+    const newItem: Gallery = {
+        name: 'temp',
+        queueItem: queueItemConverted
+    }
     
-    const s = JSON.stringify([...load(), array]);
+    const s = JSON.stringify([...load(), newItem]);
     localStorage.setItem(LOCAL_STORAGE_ITEM_ID, s);
 }
 
