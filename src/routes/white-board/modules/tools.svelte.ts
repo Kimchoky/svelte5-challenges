@@ -1,6 +1,7 @@
 import { getActionQueue } from "./queue.svelte";
 
 const actionQueue = getActionQueue();
+let colorPicker: ColorPicker = $state({ color: 'currentColor'});
 
 class Tool {
    
@@ -53,6 +54,12 @@ class GeneralTool extends Tool {
             this.actionQueue.spliceAfterCursor();
         }
     }
+    save = () => {
+        
+    }
+    load = (index: number) => {
+
+    }
 
 }
 
@@ -93,6 +100,7 @@ class Pencil extends DrawingTool {
         if (pos.isMouseDown) {
             this.toolActions.push({ method: 'lineTo', args: [pos.x, pos.y] });
             this.toolActions.push({ property: 'lineWidth', value: this.diameter });
+            this.toolActions.push({ property: 'strokeStyle', value: colorPicker.color });
             this.toolActions.push({ method: 'stroke' });
         }
         this.toolActions.push({ method: 'moveTo', args: [pos.x, pos.y] });
@@ -171,6 +179,7 @@ class Circle extends Shape {
         this.toolActions = [
             { method: 'beginPath'},
             { method: 'arc', args: [this.initPos.x, this.initPos.y, r, sa, ea] },
+            { property: 'strokeStyle', value: colorPicker.color },
             { method: 'stroke'},
             { method: 'closePath'},
         ];
@@ -186,6 +195,7 @@ class Line extends Shape {
             { method: 'beginPath'},
             { method: 'moveTo', args: [pos.x, pos.y] },
             { method: 'lineTo', args: [this.initPos.x, this.initPos.y] },
+            { property: 'strokeStyle', value: colorPicker.color },
             { method: 'stroke'},
             { method: 'closePath'},
         ];
@@ -202,6 +212,7 @@ class Square extends Shape {
         this.toolActions = [
             { method: 'beginPath'},
             { method: 'rect', args: [this.initPos.x, this.initPos.y, w, h] },
+            { property: 'strokeStyle', value: colorPicker.color },
             { method: 'stroke'},
             { method: 'closePath'},
         ];
@@ -259,6 +270,7 @@ function getDistance(x1: number, y1: number, x2: number, y2: number): number {
 }
 
 export {
+    colorPicker,
     DrawingTool,
     drawActionsInQueue
 }

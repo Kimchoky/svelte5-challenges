@@ -1,6 +1,8 @@
 <script lang="ts">
     import { getActionQueue, } from "./modules/queue.svelte";
     import { getTools } from "./modules/tools.svelte";
+    import { colorPicker } from './modules/tools.svelte';
+    import gallery from './modules/gallery.svelte';
 
     const actionQueue = getActionQueue();
     const tools = getTools();
@@ -22,37 +24,97 @@
     // let { direction, interact = $bindable(), }: { direction:string, interact: ToolInteract|null } = $props();
     let { direction, }: { direction:string } = $props();
 
+    
+    function addFavoriteColor() {
+        if (!colorPicker.favorites)
+            colorPicker.favorites = [];
+        const sliceIndex = (colorPicker.favorites.length >= 5) ? 1 : 0;
+        // limit recent palette to 3.
+        colorPicker.favorites = [...colorPicker.favorites.slice(sliceIndex), colorPicker.color];
+    }
+
+    function setColor(index: number, e: Event) {
+        e.preventDefault();
+        colorPicker.color = colorPicker.favorites[index];
+    }
+
+    function saveToGallery() {
+        console.log(actionQueue)
+        gallery.save(actionQueue.queue);
+    }
+    function loadFromGallery() {
+        const s = gallery.load();
+        console.log(s);
+    }
+
 </script>
 
 <div class="x-wrapper"
-    style=" --direction: {direction}; ">
-    <button onclick={()=>tools.setPencil()} class:x-active={tools?.tool?.name==='pencil'}>{@html icons.pencil}</button>
+    style=" --direction: {direction}; --icon-width: {iconWidth}; --color: {colorPicker.color}">
+    <button onclick={()=>{}} id="colorPicker"><input type="color" bind:value={colorPicker.color} onchange={addFavoriteColor}></button>
+    <button onclick={()=>tools.setPencil()} class="x-colored" class:x-active={tools?.tool?.name==='pencil'}>{@html icons.pencil}</button>
     <button onclick={()=>tools.setEraser()} class:x-active={tools?.tool?.name==='eraser'}>{@html icons.eraser}</button>
-    <button onclick={()=>tools.setCircle()} class:x-active={tools?.tool?.name==='circle'}>{@html icons.circle}</button>
-    <button onclick={()=>tools.setLine()} class:x-active={tools?.tool?.name==='line'}>{@html icons.line}</button>
-    <button onclick={()=>tools.setSquare()} class:x-active={tools?.tool?.name==='square'}>{@html icons.square}</button>
+    <button onclick={()=>tools.setCircle()} class="x-colored" class:x-active={tools?.tool?.name==='circle'}>{@html icons.circle}</button>
+    <button onclick={()=>tools.setLine()} class="x-colored" class:x-active={tools?.tool?.name==='line'}>{@html icons.line}</button>
+    <button onclick={()=>tools.setSquare()} class="x-colored" class:x-active={tools?.tool?.name==='square'}>{@html icons.square}</button>
     <button onclick={()=>tools.generalTool.clear()}>{@html icons.clear}</button>
     <button onclick={()=>tools.generalTool.undo()} disabled={actionQueue.cursor < 0}>{@html icons.undo}</button>
     <button onclick={()=>tools.generalTool.redo()} disabled={actionQueue.cursor >= actionQueue.queue.length - 1}>{@html icons.redo}</button>
-    <button style="visibility: hidden;"><svg width="0" height="0"></svg></button>
+    
+    <span class="x-splitter"></span>
+
+    {#each colorPicker.favorites as color, index (color)}
+        <button onclick={(e)=>setColor(index, e)}>
+            <input type="color" value={color} style="background-color: {color}">
+        </button>
+    {/each}
+
+    <span class="x-splitter"></span>
+
+    <button onclick={saveToGallery}>Save</button>
+    <button onclick={loadFromGallery}>Load</button>
+    
 </div>
 
-
 <style lang="scss">
+    #colorPicker {
+        input {
+            background-color: var(--color);
+        }
+    }
+    input[type=color] { 
+        border: 0;
+        margin: 0;
+        height: var(--icon-width);
+
+    }
+
     .x-wrapper {
         display: flex;
         flex-direction: var(--direction);
         gap: .3rem;
+        flex-wrap: wrap;
 
         button {
-            background-color: transparent;
             color: currentColor;
+            background-color: transparent;
             padding: .3rem;
 
+            min-width: var(--icon-width);
+            min-height: var(--icon-width);
+            
+            &.x-colored {
+                // color: var(--color);
+            }
             &.x-active {
                 background-color: rgb(255, 219, 229);
             }
 
         }
+    }
+
+    .x-splitter {
+        margin: 0 .5rem;
+        border-right: 1px solid currentColor;
     }
 </style>

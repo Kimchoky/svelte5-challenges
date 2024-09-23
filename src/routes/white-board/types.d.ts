@@ -24,3 +24,14 @@ type ToolAction = {
     property?: string,
     value?: string|number,
 };
+
+interface ColorPicker {
+    color: string,
+    favorites?: Array<string>,
+
+}
+
+interface Gallery {
+    name?: string,
+    queueItem: Array<QueueItem>
+}

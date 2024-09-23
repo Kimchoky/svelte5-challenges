@@ -67,10 +67,10 @@
 
 <svelte:window onresize={onResize} />
 
-<div style="position: fixed; top: 0; right: 0;">
+<!-- <div style="position: fixed; top: 0; right: 0;">
     <div>{pos.x}, {pos.y}, [{pos.isMouseDown}]</div>
     <div>{tools?.tool?.initPos?.x}, {tools?.tool?.initPos?.y}</div>
-</div>
+</div> -->
 
 <canvas id="canvas"
     class="{xCursorClass}"
